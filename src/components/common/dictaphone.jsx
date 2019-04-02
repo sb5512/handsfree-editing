@@ -113,7 +113,9 @@ class Dictaphone extends Component {
               Stop
             </button>
           </div>
-          <div className="col-11">
+        </div>
+        <div className="row">
+          <div className="col-12">
             <div className="card">
               {/* // Here begins the code for phrases */}
               {/* <Scriptor
