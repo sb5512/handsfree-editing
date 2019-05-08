@@ -40,6 +40,7 @@ export default function SpeechRecognition(options) {
           commands: null
         };
       }
+
       componentWillMount() {
         if (recognition) {
           recognition.continuous = false;

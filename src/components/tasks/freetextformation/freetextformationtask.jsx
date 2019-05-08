@@ -1,0 +1,26 @@
+import React, { Component } from "react";
+import FreeTextFormationDictate from "./freeTextFormationDictate";
+import keydown from "react-keydown";
+
+class FreeTextFormationTask extends Component {
+  componentWillReceiveProps({ keydown }) {
+    if (keydown.event) {
+      if (keydown.event.which === 66) {
+        this.props.onBackButtonClick();
+        this.props.state.history.push("/");
+      }
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="container-fluid">
+          <FreeTextFormationDictate {...this.props} />
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+export default keydown("b", "B", "1", "2", "3")(FreeTextFormationTask);

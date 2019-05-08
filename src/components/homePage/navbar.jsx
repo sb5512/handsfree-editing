@@ -8,11 +8,12 @@ class NavBar extends Component {
     if (keydown.event) {
       console.log(keydown.event.which);
       if (keydown.event.which === 86) {
-        this.props.history.push("/voiceonly");
+        this.props.state.history.push("/voiceonly");
       } else if (keydown.event.which === 77) {
-        this.props.history.push("/multimodal");
+        this.props.state.history.push("/multimodal");
       } else {
-        this.props.history.push("/");
+        this.props.stopListening();
+        this.props.state.history.push("/");
       }
     }
   }
