@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
-import ReactHoverDelayTrigger from "react-hover-delay-trigger";
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -23,6 +22,7 @@ class Autocomplete extends Component {
       showSuggestions: false,
       // What the user has entered
       userInput: this.props.text,
+      mappingNumber: this.props.mappingNumber,
       currentHoverText: ""
     };
   }
@@ -46,9 +46,15 @@ class Autocomplete extends Component {
     });
   };
 
+  onLeave = e => {
+    this.setState({
+      showSuggestions: false
+    });
+  };
+
   onClick = e => {
     // Update the user input and reset the rest of the state
-    if (this.props.selectMode) {
+    if (!this.props.selectMode) {
       this.setState({
         activeSuggestion: 0,
         filteredSuggestions: [],
@@ -86,7 +92,6 @@ class Autocomplete extends Component {
             <ul className="suggestions">
               {filteredSuggestions.map((suggestion, index) => {
                 let className;
-
                 // Flag the active suggestion with a class
                 //   if (index === activeSuggestion) {
                 //     className = "suggestion-active";
@@ -98,6 +103,7 @@ class Autocomplete extends Component {
                     key={suggestion}
                     onMouseEnter={onHoverSelectable}
                     onClick={onClick}
+                    onMouseLeave={onLeave}
                   >
                     {suggestion}
                   </li>
@@ -120,10 +126,12 @@ class Autocomplete extends Component {
         <span
           style={{ fontSize: 34, cursor: "pointer" }}
           onMouseEnter={onChange}
+          onMouseLeave={onLeave}
           onKeyDown={onKeyDown}
         >
           {this.state.userInput}
         </span>
+        {this.state.mappingNumber}
         {suggestionsListComponent}
       </Fragment>
     );

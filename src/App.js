@@ -68,6 +68,7 @@ class App extends Component {
                 <FreeTextFormationTask
                   onBackButtonClick={this.onBackButtonClick}
                   state={props}
+                  loadedImage={true}
                   {...this.props}
                 />
               )}
