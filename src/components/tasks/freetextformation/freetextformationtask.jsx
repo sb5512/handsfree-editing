@@ -3,6 +3,14 @@ import FreeTextFormationDictate from "./freeTextFormationDictate";
 import keydown from "react-keydown";
 
 class FreeTextFormationTask extends Component {
+  state = {
+    oldTranscript: ""
+  };
+
+  setOldTranscript = oldTranscript => {
+    this.setState({ oldTranscript: oldTranscript });
+  };
+
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
       if (keydown.event.which === 66) {
@@ -16,7 +24,10 @@ class FreeTextFormationTask extends Component {
     return (
       <React.Fragment>
         <div className="container-fluid">
-          <FreeTextFormationDictate {...this.props} />
+          <FreeTextFormationDictate
+            {...this.props}
+            setOldTranscript={this.setOldTranscript}
+          />
         </div>
       </React.Fragment>
     );

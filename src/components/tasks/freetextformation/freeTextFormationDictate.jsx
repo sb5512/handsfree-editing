@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import ImageLoader from "./imageLoader";
 import Transcription from "./transcription";
+import Utils from "../../../utils/Utils";
 
 const propTypes = {
   // Props injected by SpeechRecognition
@@ -12,14 +13,28 @@ const propTypes = {
 };
 
 class FreeTextFormationDictate extends Component {
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.transcript);
+    // this.props.resetTranscript();
+  }
+
+  componentDidMount() {
+    console.log("Called");
+    const oldTranscript = this.props.transcript;
+
+    this.props.setOldTranscript(oldTranscript);
+  }
+
   render() {
     const { transcript, browserSupportsSpeechRecognition } = this.props;
-    const transcriptArr = transcript.split(/(\s+)/);
-    let ifContainsMap = transcript.includes("map");
-    const command = ifContainsMap;
+
     if (!browserSupportsSpeechRecognition) {
       return null;
     }
+
+    const transcriptArr = transcript.split(/(\s+)/);
+    let { command, isCommand } = Utils.containsCommand(transcriptArr);
+    console.log("WHATTTTTTTTTTTTTTTTT IS THECOMMMAND    ", isCommand, command);
 
     return (
       <React.Fragment>
@@ -28,8 +43,9 @@ class FreeTextFormationDictate extends Component {
         <div className="row">
           <div className="col-12">
             <Transcription
-              transcript={transcript}
+              {...this.props}
               transcriptArr={transcriptArr}
+              isCommand={isCommand}
               command={command}
             />
 

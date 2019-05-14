@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Autocomplete from "../../common/autocomplete";
+import commandsENUM from "./commandENUM";
 
 class Transcription extends Component {
   state = {
@@ -7,7 +8,6 @@ class Transcription extends Component {
     hover: false,
     editMode: false,
     selectMode: false,
-    oldTranscript: "",
     phraseCount: 0
   };
 
@@ -18,6 +18,8 @@ class Transcription extends Component {
 
   toggleHoverOn = event => {
     event.target.style.backgroundColor = "#FFFF4F";
+    this.props.resetTranscript();
+    // this.props.setOldTranscript(this.props.transcript);
     this.setState({ hover: true });
   };
 
@@ -31,24 +33,24 @@ class Transcription extends Component {
   };
 
   render() {
-    const { transcript, transcriptArr, command } = this.props;
+    const { transcript, transcriptArr, isCommand, command } = this.props;
 
     return (
       <div className="card">
         <div className="card-body">
-          {command
+          {isCommand && command === commandsENUM.MAP
             ? transcript &&
               transcriptArr.map((word, index) => {
                 return (
                   <React.Fragment key={index}>
                     {/* <span
-                    onClick={e => this.handleWordClick(e, word, index)}
-                    onMouseOver={this.toggleHoverOn}
-                    onMouseLeave={this.toggleHoverOff}
-                  >
-                    {word} {index}
-                  </span>
-                  <br /> */}
+                      onClick={e => this.handleWordClick(e, word, index)}
+                      onMouseOver={this.toggleHoverOn}
+                      onMouseLeave={this.toggleHoverOff}
+                    >
+                      {word} {index}
+                    </span>
+                    <br /> */}
 
                     <Autocomplete
                       suggestions={["Hillo", "Halo", "Hi"]}
@@ -59,7 +61,24 @@ class Transcription extends Component {
                   </React.Fragment>
                 );
               })
-            : transcript &&
+            : isCommand && command === "some other command"
+            ? transcript &&
+              transcriptArr.map((word, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <span
+                      style={{ fontSize: 34, cursor: "pointer" }}
+                      onClick={e => this.handleWordClick(e, word, index)}
+                      onMouseOver={this.toggleHoverOn}
+                      onMouseLeave={this.toggleHoverOff}
+                    >
+                      {word}
+                    </span>
+                  </React.Fragment>
+                );
+              })
+            : // If not a command
+              transcript &&
               transcriptArr.map((word, index) => {
                 return (
                   <React.Fragment key={index}>
@@ -73,11 +92,11 @@ class Transcription extends Component {
                     </span>
 
                     {/* <Autocomplete
-                    suggestions={["Hillo", "Halo", "Hi"]}
-                    text={word}
-                    mappingNumber={index}
-                    selectMode={this.state.selectMode}
-                  /> */}
+                      suggestions={["Hillo", "Halo", "Hi"]}
+                      text={word}
+                      mappingNumber={index}
+                      selectMode={this.state.selectMode}
+                    /> */}
                   </React.Fragment>
                 );
               })}

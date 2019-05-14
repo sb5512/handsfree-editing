@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Route, Switch, Redirect } from "react-router-dom";
-import SpeechRecognition from "react-speech-recognition";
+// import SpeechRecognition from "react-speech-recognition";
 
 import "./App.css";
 import PropTypes from "prop-types";
@@ -13,6 +13,7 @@ import Multimodal from "./components/homePage/multimodal";
 import CopyTask from "./components/tasks/copy/copytask";
 import ReplyTask from "./components/tasks/reply/replytask";
 import FreeTextFormationTask from "./components/tasks/freetextformation/freetextformationtask";
+import SpeechRecognition from "./components/common/speechRecognition";
 
 const propTypes = {
   // Props injected by SpeechRecognition
@@ -100,4 +101,5 @@ const options = {
 
 App.propTypes = propTypes;
 
+// export default SpeechRecognition(options)(App);
 export default SpeechRecognition(options)(App);
