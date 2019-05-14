@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import getDateandTime from "../../utils/dateAndTime";
 
 export default function SpeechRecognition(options) {
   const SpeechRecognitionInner = function(WrappedComponent) {
@@ -32,23 +31,18 @@ export default function SpeechRecognition(options) {
       constructor(props) {
         super(props);
 
+        if (browserSupportsSpeechRecognition) {
+          recognition.continuous = options.continuous !== false;
+          recognition.interimResults = true;
+          recognition.onresult = this.updateTranscript.bind(this);
+          recognition.onend = this.onRecognitionDisconnect.bind(this);
+        }
+
         this.state = {
           interimTranscript,
           finalTranscript,
-          previousTranscript: [],
-          listening: false,
-          commands: null
+          listening
         };
-      }
-
-      componentWillMount() {
-        if (recognition) {
-          recognition.continuous = false;
-          recognition.interimResults = false;
-          recognition.onresult = this.updateTranscript.bind(this);
-          recognition.onend = this.onRecognitionDisconnect.bind(this);
-          this.setState({ listening });
-        }
       }
 
       disconnect = disconnectType => {
@@ -74,8 +68,12 @@ export default function SpeechRecognition(options) {
         listening = false;
         if (pauseAfterDisconnect) {
           this.setState({ listening });
-        } else {
-          this.startListening();
+        } else if (recognition) {
+          if (recognition.continuous) {
+            this.startListening();
+          } else {
+            this.setState({ listening });
+          }
         }
         pauseAfterDisconnect = false;
       }
@@ -95,11 +93,7 @@ export default function SpeechRecognition(options) {
             );
           }
         }
-        this.setState({
-          finalTranscript,
-          interimTranscript,
-          commands: [finalTranscript]
-        });
+        this.setState({ finalTranscript, interimTranscript });
       }
 
       concatTranscripts(...transcriptParts) {
@@ -112,27 +106,15 @@ export default function SpeechRecognition(options) {
       resetTranscript = () => {
         interimTranscript = "";
         finalTranscript = "";
-        let previousTranscript = [...this.state.previousTranscript];
-        if (this.state.finalTranscript !== "") {
-          previousTranscript.push(
-            this.state.finalTranscript + " at " + getDateandTime()
-          );
-        }
         this.disconnect("RESET");
-        this.setState({
-          interimTranscript,
-          finalTranscript,
-          commands: [""],
-          previousTranscript: previousTranscript
-        });
-      };
-
-      resetCommands = () => {
-        this.setState({ commands: null });
+        this.setState({ interimTranscript, finalTranscript });
       };
 
       startListening = () => {
         if (recognition && !listening) {
+          if (!recognition.continuous) {
+            this.resetTranscript();
+          }
           try {
             recognition.start();
           } catch (DOMException) {
@@ -160,7 +142,6 @@ export default function SpeechRecognition(options) {
           finalTranscript,
           interimTranscript
         );
-        //console.log(this.state.commands);
 
         return (
           <WrappedComponent
@@ -169,10 +150,7 @@ export default function SpeechRecognition(options) {
             abortListening={this.abortListening}
             stopListening={this.stopListening}
             transcript={transcript}
-            previousTranscript={this.state.previousTranscript}
             recognition={recognition}
-            commands={this.state.commands}
-            resetCommands={this.resetCommands}
             browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
             {...this.state}
             {...this.props}
