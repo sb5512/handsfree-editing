@@ -33,12 +33,13 @@ class Transcription extends Component {
   };
 
   render() {
-    const { transcript, transcriptArr, isCommand, command } = this.props;
+    const { transcript, transcriptArr, hasCommand, command } = this.props;
+    let isCommand = hasCommand;
 
     return (
       <div className="card">
         <div className="card-body">
-          {isCommand && command === commandsENUM.MAP
+          {isCommand
             ? transcript &&
               transcriptArr.map((word, index) => {
                 return (
@@ -61,7 +62,7 @@ class Transcription extends Component {
                   </React.Fragment>
                 );
               })
-            : isCommand && command === "some other command"
+            : isCommand
             ? transcript &&
               transcriptArr.map((word, index) => {
                 return (

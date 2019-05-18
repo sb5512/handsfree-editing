@@ -26,6 +26,7 @@ class FreeTextFormationTask extends Component {
         <div className="container-fluid">
           <FreeTextFormationDictate
             {...this.props}
+            {...this.state}
             setOldTranscript={this.setOldTranscript}
           />
         </div>
