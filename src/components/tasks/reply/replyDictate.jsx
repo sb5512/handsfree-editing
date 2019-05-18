@@ -50,25 +50,25 @@ class ReplyDictate extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.props.commands &&
-      this.props.commands[0].split(" ")[
-        this.props.commands[0].split(" ").length - 1
-      ] === "next"
-    ) {
-      this.handleNext();
-      this.props.resetTranscript();
-    }
-    if (
-      this.props.commands &&
-      this.props.commands[0].split(" ")[
-        this.props.commands[0].split(" ").length - 1
-      ] === "select"
-    ) {
-      this.setState({ selectMode: true });
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (
+  //     this.props.commands &&
+  //     this.props.commands[0].split(" ")[
+  //       this.props.commands[0].split(" ").length - 1
+  //     ] === "next"
+  //   ) {
+  //     this.handleNext();
+  //     this.props.resetTranscript();
+  //   }
+  //   if (
+  //     this.props.commands &&
+  //     this.props.commands[0].split(" ")[
+  //       this.props.commands[0].split(" ").length - 1
+  //     ] === "select"
+  //   ) {
+  //     this.setState({ selectMode: true });
+  //   }
+  // }
 
   render() {
     const {
@@ -87,17 +87,17 @@ class ReplyDictate extends Component {
       return null;
     }
 
-    let editClass = "";
-    let styleEdit = { fontSize: 34, cursor: "pointer" };
-    if (
-      this.props.commands &&
-      this.props.commands[0].split(" ")[
-        this.props.commands[0].split(" ").length - 1
-      ] === "edit"
-    ) {
-      editClass = "border border-primary m-4 ";
-      styleEdit = { fontSize: 34, cursor: "pointer" };
-    }
+    // let editClass = "";
+    // let styleEdit = { fontSize: 34, cursor: "pointer" };
+    // if (
+    //   this.props.commands &&
+    //   this.props.commands[0].split(" ")[
+    //     this.props.commands[0].split(" ").length - 1
+    //   ] === "edit"
+    // ) {
+    //   editClass = "border border-primary m-4 ";
+    //   styleEdit = { fontSize: 34, cursor: "pointer" };
+    // }
 
     const transcriptArr = transcript.split(/(\s+)/);
     return (

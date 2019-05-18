@@ -23,73 +23,43 @@ const propTypes = {
 };
 
 class App extends Component {
-  onBackButtonClick = () => {
-    this.props.resetTranscript();
-    this.props.abortListening();
-  };
-
   render() {
     return (
-      <div tabIndex="1">
-        <Link to="/">
-          <button
-            onClick={this.onBackButtonClick}
-            id="backButton"
-            className="btn btn-light btn-lg btn-block-height text-center"
-          >
-            <i className="fa fa-chevron-up">(b)</i>
-          </button>
-        </Link>
-        <br />
-        <div tabIndex="0" className="content">
-          <Switch>
-            <Route
-              path="/copytask"
-              render={props => (
-                <CopyTask
-                  onBackButtonClick={this.onBackButtonClick}
-                  state={props}
-                  {...this.props}
-                />
-              )}
-            />
-            <Route
-              path="/replytask"
-              render={props => (
-                <ReplyTask
-                  onBackButtonClick={this.onBackButtonClick}
-                  state={props}
-                  {...this.props}
-                />
-              )}
-            />
-            <Route
-              path="/freetextformationtask"
-              render={props => (
-                <FreeTextFormationTask
-                  onBackButtonClick={this.onBackButtonClick}
-                  state={props}
-                  loadedImage={true}
-                  {...this.props}
-                />
-              )}
-            />
-            <Route
-              path="/voiceonly"
-              render={props => <Voiceonly state={props} {...this.props} />}
-            />
-            <Route
-              path="/multimodal"
-              render={props => <Multimodal state={props} {...this.props} />}
-            />
-            <Route
-              path="/"
-              exact
-              render={props => <NavBar state={props} {...this.props} />}
-            />
-            <Redirect to="/not-found" />
-          </Switch>
-        </div>
+      <div tabIndex="0" className="content">
+        <Switch>
+          <Route
+            path="/copytask"
+            render={props => <CopyTask state={props} {...this.props} />}
+          />
+          <Route
+            path="/replytask"
+            render={props => <ReplyTask state={props} {...this.props} />}
+          />
+          <Route
+            path="/freetextformationtask"
+            render={props => (
+              <FreeTextFormationTask
+                state={props}
+                loadedImage={true}
+                {...this.props}
+              />
+            )}
+          />
+          <Route
+            path="/voiceonly"
+            render={props => <Voiceonly state={props} {...this.props} />}
+          />
+          <Route
+            path="/multimodal"
+            render={props => <Multimodal state={props} {...this.props} />}
+          />
+          <Route
+            path="/"
+            exact
+            render={props => <NavBar state={props} {...this.props} />}
+          />
+          <Redirect to="/not-found" />
+        </Switch>
       </div>
     );
   }

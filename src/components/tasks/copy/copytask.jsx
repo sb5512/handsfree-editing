@@ -6,8 +6,9 @@ class CopyTask extends Component {
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
       if (keydown.event.which === 66) {
-        this.props.onBackButtonClick();
-        this.props.state.history.push("/");
+        this.props.resetTranscript();
+        this.props.stopListening();
+        this.props.state.history.goBack();
       }
     }
   }

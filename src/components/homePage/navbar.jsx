@@ -12,8 +12,8 @@ class NavBar extends Component {
       } else if (keydown.event.which === 77) {
         this.props.state.history.push("/multimodal");
       } else {
+        this.props.resetTranscript();
         this.props.stopListening();
-        this.props.state.history.push("/");
       }
     }
   }
