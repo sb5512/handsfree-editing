@@ -26,6 +26,8 @@ export default function SpeechRecognition(options) {
     let pauseAfterDisconnect = false;
     let interimTranscript = "";
     let finalTranscript = "";
+    let commands = [];
+    let hasCommand = false;
 
     return class SpeechRecognitionContainer extends Component {
       constructor(props) {
@@ -41,7 +43,9 @@ export default function SpeechRecognition(options) {
         this.state = {
           interimTranscript,
           finalTranscript,
-          listening
+          listening,
+          commands: [],
+          hasCommand: false
         };
       }
 
@@ -78,22 +82,49 @@ export default function SpeechRecognition(options) {
         pauseAfterDisconnect = false;
       }
 
+      updateSplitFinalTranscriptCommands(toChangeScript) {
+        console.log(toChangeScript);
+        toChangeScript = toChangeScript.substring(0, toChangeScript.length - 1);
+        return toChangeScript;
+      }
+
       updateTranscript(event) {
         interimTranscript = "";
+        hasCommand = false;
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
+            let ifContainsMap = event.results[i][0].transcript.trim() === "map";
+            if (ifContainsMap) {
+              commands.push("map");
+              hasCommand = true;
+            }
             finalTranscript = this.concatTranscripts(
               finalTranscript,
-              event.results[i][0].transcript
+              ifContainsMap ? "" : event.results[i][0].transcript
             );
           } else {
             interimTranscript = this.concatTranscripts(
               interimTranscript,
-              event.results[i][0].transcript
+              event.results[i][0].transcript.trim() === "map"
+                ? ""
+                : event.results[i][0].transcript
             );
           }
         }
-        this.setState({ finalTranscript, interimTranscript });
+        // updateFinalTranscriptIfCommand
+        // transcript = this.updateSplitFinalTranscriptCommands(transcript);
+
+        // check for commands
+        // Will have to determine if command mode keeps on becoming active
+        // Will have to determine if command mode keeps on becoming active
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAA", finalTranscript);
+        console.log("BBBBBBBBBBBBBBBBBBBBbBBBB", interimTranscript);
+        this.setState({
+          finalTranscript,
+          interimTranscript,
+          commands,
+          hasCommand
+        });
       }
 
       concatTranscripts(...transcriptParts) {
@@ -138,7 +169,7 @@ export default function SpeechRecognition(options) {
       };
 
       render() {
-        const transcript = this.concatTranscripts(
+        let transcript = this.concatTranscripts(
           finalTranscript,
           interimTranscript
         );

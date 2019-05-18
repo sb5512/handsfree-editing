@@ -33,8 +33,6 @@ class FreeTextFormationDictate extends Component {
     }
 
     const transcriptArr = transcript.split(/(\s+)/);
-    let { command, isCommand } = Utils.containsCommand(transcriptArr);
-    console.log("WHATTTTTTTTTTTTTTTTT IS THECOMMMAND    ", isCommand, command);
 
     return (
       <React.Fragment>
@@ -45,8 +43,8 @@ class FreeTextFormationDictate extends Component {
             <Transcription
               {...this.props}
               transcriptArr={transcriptArr}
-              isCommand={isCommand}
-              command={command}
+              isCommand={this.props.state.hasCommand}
+              command={this.props.state.command}
             />
 
             {/* Begins: Have to refactor as component */}
