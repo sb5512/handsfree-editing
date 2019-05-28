@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import TextToNumbers from "../../utils/textToNumbers";
+import Utils from "../../utils/Utils";
 
 export default function SpeechRecognition(options) {
   const SpeechRecognitionInner = function(WrappedComponent) {
@@ -27,7 +29,6 @@ export default function SpeechRecognition(options) {
     let interimTranscript = "";
     let finalTranscript = "";
     let commands = [];
-    let hasCommand = false;
 
     return class SpeechRecognitionContainer extends Component {
       constructor(props) {
@@ -45,7 +46,9 @@ export default function SpeechRecognition(options) {
           finalTranscript,
           listening,
           commands: [],
-          hasCommand: false
+          hasCommand: false,
+          spellMode: false,
+          suggestionListNumber: null
         };
       }
 
@@ -88,27 +91,108 @@ export default function SpeechRecognition(options) {
         return toChangeScript;
       }
 
+      containsCommands(interimWord) {
+        return interimWord.endsWith("map");
+      }
+
       updateTranscript(event) {
+        // state hascommand true bhayo bhane hami command mode ma cham
         interimTranscript = "";
-        hasCommand = false;
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            let ifContainsMap = event.results[i][0].transcript.trim() === "map";
-            if (ifContainsMap) {
-              commands.push("map");
+        let suggestionListNumber = null;
+        let hasCommand = false;
+        let spellMode = false;
+
+        /**
+         * Command is already set to "map". Now we here see what after we say "map" command
+         */
+        if (this.state.hasCommand) {
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            let currentTranscription = event.results[i][0].transcript.trim();
+            let objIsNumberAndVal = Utils.checkStringIsNumberWordOrNumber(
+              currentTranscription
+            );
+            console.log(
+              "WHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAATTTTTTTTTTTTTT is my booolenaaa ",
+              Utils.checkStringIsNumberWordOrNumber(currentTranscription)
+            );
+
+            // get final transcript here
+            if (event.results[i].isFinal) {
+              if (currentTranscription.endsWith("done")) {
+                hasCommand = false;
+                spellMode = false;
+              } else if (currentTranscription.endsWith("spell")) {
+                // This is where we will check if selection mode is on and "spell word is in the transcript"
+                console.log(
+                  "NOWWWWWWWWWWWW I AMMMMMMMMMMM IN SPell MODEEEEEEEEE"
+                );
+                hasCommand = true; // Still command mode
+                spellMode = true;
+              } else if (
+                // Here we check if the transcript is a number TODOOOOOOOO for now only one
+                !this.state.spellMode &&
+                objIsNumberAndVal.check
+              ) {
+                /**
+                 * trying to convert speech into number. But we might have no space before end i.e only one word
+                 */
+                suggestionListNumber =
+                  currentTranscription.lastIndexOf(" ") > 0
+                    ? TextToNumbers.text2num(
+                        currentTranscription.substring(
+                          currentTranscription.lastIndexOf(" "),
+                          currentTranscription.length
+                        )
+                      )
+                    : parseInt(currentTranscription);
+                /**
+                 *
+                 */
+
+                hasCommand = true; // Still command mode
+                spellMode = false;
+              } else {
+                hasCommand = true;
+                spellMode = this.state.spellMode;
+              }
+            } else {
+              // Even interim results has some command then execute it.
               hasCommand = true;
+              spellMode = this.state.spellMode;
             }
-            finalTranscript = this.concatTranscripts(
-              finalTranscript,
-              ifContainsMap ? "" : event.results[i][0].transcript
-            );
-          } else {
-            interimTranscript = this.concatTranscripts(
-              interimTranscript,
-              event.results[i][0].transcript.trim() === "map"
-                ? ""
-                : event.results[i][0].transcript
-            );
+          }
+        } else {
+          /**
+           * Command is "map" begins
+           */
+          for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+              let ifContainsMap = event.results[i][0].transcript
+                .trim()
+                .endsWith("map");
+
+              if (ifContainsMap) {
+                commands.push("map");
+                hasCommand = true;
+              }
+              // finalscript k bhayo ta
+              finalTranscript = this.concatTranscripts(
+                finalTranscript,
+                ifContainsMap
+                  ? event.results[i][0].transcript.substring(
+                      0,
+                      event.results[i][0].transcript.lastIndexOf(" ")
+                    )
+                  : event.results[i][0].transcript
+              );
+            } else {
+              interimTranscript = this.concatTranscripts(
+                interimTranscript,
+                this.containsCommands(event.results[i][0].transcript.trim())
+                  ? ""
+                  : event.results[i][0].transcript
+              );
+            }
           }
         }
         // updateFinalTranscriptIfCommand
@@ -116,14 +200,13 @@ export default function SpeechRecognition(options) {
 
         // check for commands
         // Will have to determine if command mode keeps on becoming active
-        // Will have to determine if command mode keeps on becoming active
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAA", finalTranscript);
-        console.log("BBBBBBBBBBBBBBBBBBBBbBBBB", interimTranscript);
         this.setState({
           finalTranscript,
           interimTranscript,
           commands,
-          hasCommand
+          hasCommand,
+          suggestionListNumber,
+          spellMode
         });
       }
 
@@ -174,6 +257,26 @@ export default function SpeechRecognition(options) {
           interimTranscript
         );
 
+        console.log(
+          "SUGGESTION NUMBER FOR WORD IS : ",
+          this.state.suggestionListNumber
+        );
+        /** OBJECT CREATION FOR EACH WORD BEGINS */
+        let transcriptObject = [];
+        for (const [index, word] of transcript.split(" ").entries()) {
+          let showSuggestionBool =
+            this.state.suggestionListNumber &&
+            index === this.state.suggestionListNumber
+              ? true
+              : false;
+          transcriptObject.push({
+            text: word,
+            showSuggestion: showSuggestionBool,
+            spellMode: this.state.spellMode
+          });
+        }
+        /** OBJECT CREATION FOR EACH WORD ENDS */
+
         return (
           <WrappedComponent
             resetTranscript={this.resetTranscript}
@@ -181,6 +284,7 @@ export default function SpeechRecognition(options) {
             abortListening={this.abortListening}
             stopListening={this.stopListening}
             transcript={transcript}
+            transcriptObject={transcriptObject}
             recognition={recognition}
             browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
             {...this.state}

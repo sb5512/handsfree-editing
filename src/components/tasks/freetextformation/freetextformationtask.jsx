@@ -38,7 +38,7 @@ class FreeTextFormationTask extends Component {
       <React.Fragment>
         <div>
           <ReactCountdownClock
-            seconds={10}
+            seconds={3}
             color="#000"
             alpha={0.9}
             size={100}

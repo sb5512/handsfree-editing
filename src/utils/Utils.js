@@ -1,4 +1,5 @@
 import commandsENUM from "../components/tasks/freetextformation/commandENUM";
+import TextToNumbers from "./textToNumbers";
 
 class Utils {
   static getRandomInt(max) {
@@ -20,6 +21,19 @@ class Utils {
       default:
         return { command: "null", isCommand: false };
     }
+  }
+
+  static checkStringIsNumberWordOrNumber(currentTranscription) {
+    let suggestionListNumber =
+      currentTranscription.lastIndexOf(" ") > 0
+        ? TextToNumbers.text2num(
+            currentTranscription.substring(
+              currentTranscription.lastIndexOf(" "),
+              currentTranscription.length
+            )
+          )
+        : parseInt(currentTranscription);
+    return { check: !isNaN(suggestionListNumber), value: suggestionListNumber }; // currentTranscription.endsWith("1") || currentTranscription.endsWith("one")|| currentTranscription.endsWith("one");
   }
 }
 

@@ -19,13 +19,18 @@ class Autocomplete extends Component {
       // The suggestions that match the user's input
       filteredSuggestions: [],
       // Whether or not the suggestion list is shown
-      showSuggestions: false,
+      showSuggestion: this.props.showSuggestion,
       // What the user has entered
       userInput: this.props.text,
       mappingNumber: this.props.mappingNumber,
       currentHoverText: ""
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ showSuggestion: nextProps.showSuggestion });
+  }
+
   onChange = e => {
     const { suggestions } = this.props;
     const userInput = e.currentTarget.value;
@@ -42,15 +47,15 @@ class Autocomplete extends Component {
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions,
-      showSuggestions: true
+      showSuggestion: true
     });
   };
 
-  onLeave = e => {
-    this.setState({
-      showSuggestions: false
-    });
-  };
+  // onLeave = e => {
+  //   this.setState({
+  //     showSuggestion: false
+  //   });
+  // };
 
   onClick = e => {
     // Update the user input and reset the rest of the state
@@ -58,16 +63,19 @@ class Autocomplete extends Component {
       this.setState({
         activeSuggestion: 0,
         filteredSuggestions: [],
-        showSuggestions: false,
+        showSuggestion: false,
         userInput: e.currentTarget.innerText
       });
     }
   };
 
   onHoverSelectable = event => {
+    console.log("Mouse entered");
     console.log(event.currentTarget.textContent);
     //this.setState({ currentHoverText: event.currentTarget.textContent });
-    this.setState({ userInput: event.currentTarget.textContent });
+    this.setState({
+      userInput: event.currentTarget.textContent
+    });
   };
 
   render() {
@@ -85,54 +93,49 @@ class Autocomplete extends Component {
     // if (this.props.selectMode) {
     //   userVal = this.state.currentHoverText;
     // }
-    if (!this.props.selectMode) {
-      if (showSuggestions) {
-        if (filteredSuggestions.length) {
-          suggestionsListComponent = (
-            <ul className="suggestions">
-              {filteredSuggestions.map((suggestion, index) => {
-                let className;
-                // Flag the active suggestion with a class
-                //   if (index === activeSuggestion) {
-                //     className = "suggestion-active";
-                //   }
+    console.log(
+      "WHAT IS MY STATEEEEEEE FOR SHOWSUGGESTION",
+      this.state.showSuggestion
+    );
+    console.log(
+      "WHAT IS MY prosps sent FOR SHOWSUGGESTION",
+      this.props.showSuggestion
+    );
+    if (this.state.showSuggestion) {
+      // if (filteredSuggestions.length) {
+      suggestionsListComponent = (
+        <ul className="suggestions">
+          {this.props.suggestions.map((suggestion, index) => {
+            let className;
+            // Flag the active suggestion with a class
+            //   if (index === activeSuggestion) {
+            //     className = "suggestion-active";
+            //   }
 
-                return (
-                  <li
-                    className={className}
-                    key={suggestion}
-                    onMouseEnter={onHoverSelectable}
-                    onClick={onClick}
-                    onMouseLeave={onLeave}
-                  >
-                    {suggestion}
-                  </li>
-                );
-              })}
-            </ul>
-          );
-        } else {
-          suggestionsListComponent = (
-            <div className="no-suggestions">
-              <em>No suggestions, you're on your own!</em>
-            </div>
-          );
-        }
-      }
+            return (
+              <li
+                className={className}
+                key={suggestion}
+                onMouseEnter={onHoverSelectable}
+                onClick={onClick}
+              >
+                {suggestion}
+              </li>
+            );
+          })}
+        </ul>
+      );
+    } else {
+      suggestionsListComponent = <span />;
     }
 
     return (
       <Fragment>
-        <span
-          style={{ fontSize: 34, cursor: "pointer" }}
-          onMouseEnter={onChange}
-          onMouseLeave={onLeave}
-          onKeyDown={onKeyDown}
-        >
+        <span style={{ fontSize: 34, cursor: "pointer", paddingLeft: 20 }}>
           {this.state.userInput}
+          {suggestionsListComponent}
         </span>
         {this.state.mappingNumber}
-        {suggestionsListComponent}
       </Fragment>
     );
   }
