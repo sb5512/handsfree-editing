@@ -33,37 +33,37 @@ class Transcription extends Component {
   };
 
   render() {
-    const { transcript, transcriptArr, hasCommand, command } = this.props;
+    const {
+      transcript,
+      transcriptArr,
+      hasCommand,
+      command,
+      transcriptObject
+    } = this.props;
     let isCommand = hasCommand;
+
+    let toReturn;
 
     return (
       <div className="card">
         <div className="card-body">
           {isCommand
             ? transcript &&
-              transcriptArr.map((word, index) => {
+              transcriptObject.map((wordObject, index) => {
                 return (
                   <React.Fragment key={index}>
-                    {/* <span
-                      onClick={e => this.handleWordClick(e, word, index)}
-                      onMouseOver={this.toggleHoverOn}
-                      onMouseLeave={this.toggleHoverOff}
-                    >
-                      {word} {index}
-                    </span>
-                    <br /> */}
-
                     <Autocomplete
                       suggestions={["Hillo", "Halo", "Hi"]}
-                      text={word}
+                      text={wordObject.text}
+                      showSuggestion={wordObject.showSuggestion}
                       mappingNumber={index}
                       selectMode={this.state.selectMode}
+                      {...this.props}
                     />
                   </React.Fragment>
                 );
               })
-            : isCommand
-            ? transcript &&
+            : transcript &&
               transcriptArr.map((word, index) => {
                 return (
                   <React.Fragment key={index}>
@@ -75,29 +75,6 @@ class Transcription extends Component {
                     >
                       {word}
                     </span>
-                  </React.Fragment>
-                );
-              })
-            : // If not a command
-              transcript &&
-              transcriptArr.map((word, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <span
-                      style={{ fontSize: 34, cursor: "pointer" }}
-                      onClick={e => this.handleWordClick(e, word, index)}
-                      onMouseOver={this.toggleHoverOn}
-                      onMouseLeave={this.toggleHoverOff}
-                    >
-                      {word}
-                    </span>
-
-                    {/* <Autocomplete
-                      suggestions={["Hillo", "Halo", "Hi"]}
-                      text={word}
-                      mappingNumber={index}
-                      selectMode={this.state.selectMode}
-                    /> */}
                   </React.Fragment>
                 );
               })}

@@ -25,6 +25,9 @@ code {
     monospace;
 }
 
+.card-body span {
+  position: relative;
+}
 /* For home page */
 .btn-block {
   display: block;
@@ -57,6 +60,8 @@ code {
   width: calc(300px + 1rem);
   position: absolute;
   display: inline-block;
+  margin-top: 40px;
+  margin-left: -84px;
 }
 
 .suggestions li {

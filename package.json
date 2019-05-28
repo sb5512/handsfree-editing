@@ -7,12 +7,14 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",
     "react": "^16.8.6",
+    "react-countdown-clock": "^2.6.0",
     "react-dom": "^16.8.6",
     "react-hover-delay-trigger": "^0.2.1",
     "react-keydown": "^1.9.8",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
-    "react-speech-recognition": "^2.0.1"
+    "react-speech-recognition": "^2.0.1",
+    "words-to-numbers": "^1.5.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 import ImageLoader from "./imageLoader";
 import Transcription from "./transcription";
-import Utils from "../../../utils/Utils";
 
 const propTypes = {
   // Props injected by SpeechRecognition
@@ -13,18 +12,6 @@ const propTypes = {
 };
 
 class FreeTextFormationDictate extends Component {
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.transcript);
-    // this.props.resetTranscript();
-  }
-
-  componentDidMount() {
-    console.log("Called");
-    const oldTranscript = this.props.transcript;
-
-    this.props.setOldTranscript(oldTranscript);
-  }
-
   render() {
     const { transcript, browserSupportsSpeechRecognition } = this.props;
 

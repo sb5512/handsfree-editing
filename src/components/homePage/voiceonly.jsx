@@ -7,17 +7,15 @@ class Voiceonly extends Component {
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
       if (keydown.event.which === 49) {
-        this.props.startListening();
         this.props.state.history.push("/copytask");
       } else if (keydown.event.which === 50) {
-        this.props.startListening();
         this.props.state.history.push("/replytask");
       } else if (keydown.event.which === 51) {
-        this.props.startListening();
         this.props.state.history.push("/freetextformationtask");
       } else {
+        this.props.resetTranscript();
         this.props.stopListening();
-        this.props.state.history.push("/");
+        this.props.state.history.goBack();
       }
     }
   }
@@ -32,7 +30,6 @@ class Voiceonly extends Component {
           <div className="col-4">
             <Link to="/copytask">
               <button
-                onClick={this.props.startListening}
                 type="button"
                 className="btn btn-primary btn-lg btn-block"
               >
@@ -45,7 +42,6 @@ class Voiceonly extends Component {
           <div className="col-4">
             <Link to="/replytask">
               <button
-                onClick={this.props.startListening}
                 type="button"
                 className="btn btn-primary btn-lg btn-block"
               >
@@ -58,7 +54,6 @@ class Voiceonly extends Component {
           <div className="col-4">
             <Link to="/freetextformationtask">
               <button
-                onClick={this.props.startListening}
                 type="button"
                 className="btn btn-primary btn-lg btn-block"
               >
