@@ -33,7 +33,10 @@ class Utils {
             )
           )
         : parseInt(currentTranscription);
-    return { check: !isNaN(suggestionListNumber), value: suggestionListNumber }; // currentTranscription.endsWith("1") || currentTranscription.endsWith("one")|| currentTranscription.endsWith("one");
+    return {
+      check: !isNaN(suggestionListNumber) && suggestionListNumber > 0,
+      value: suggestionListNumber
+    }; // currentTranscription.endsWith("1") || currentTranscription.endsWith("one")|| currentTranscription.endsWith("one");
   }
 }
 

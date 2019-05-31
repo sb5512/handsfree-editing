@@ -5,6 +5,8 @@ import keydown from "react-keydown";
 import ReactCountdownClock from "react-countdown-clock";
 
 class FreeTextFormationTask extends Component {
+  state = { readyToListen: false };
+
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
       if (keydown.event.which === 66) {
@@ -15,22 +17,39 @@ class FreeTextFormationTask extends Component {
     }
   }
 
+  microphoneButtonClick = () => {
+    if (this.state.readyToListen) {
+      console.log("clicked to start listening");
+      this.setState({ readyToListen: false });
+      this.props.stopListening();
+    } else {
+      console.log("clicked to start listening");
+      this.setState({ readyToListen: true });
+      this.props.startListening();
+    }
+  };
+
   myCallback = () => {
     this.setState({ readyToListen: true });
     this.props.startListening();
   };
-  state = { readyToListen: false };
 
   render() {
     let speechButton = "";
     this.state.readyToListen
       ? (speechButton = (
-          <button className="btn btn-success btn-lg float-left text-center">
+          <button
+            className="btn btn-success btn-lg text-center"
+            onClick={this.microphoneButtonClick}
+          >
             <i className="fa fa-microphone" />
           </button>
         ))
       : (speechButton = (
-          <button className="btn btn-danger btn-lg float-left text-center">
+          <button
+            className="btn btn-danger btn-lg text-center"
+            onClick={this.microphoneButtonClick}
+          >
             <i className="fa fa-microphone" />
           </button>
         ));
