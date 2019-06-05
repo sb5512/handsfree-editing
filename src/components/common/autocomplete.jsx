@@ -22,7 +22,7 @@ class Autocomplete extends Component {
       showSuggestion: this.props.showSuggestion,
       // What the user has entered
       userInput: this.props.text,
-      mappingNumber: this.props.mappingNumber,
+      indexing: this.props.indexing,
       currentHoverText: ""
     };
   }
@@ -92,7 +92,7 @@ class Autocomplete extends Component {
           {this.state.userInput}
           {suggestionsListComponent}
         </span>
-        {this.state.mappingNumber}
+        {this.state.indexing}
       </Fragment>
     );
   }

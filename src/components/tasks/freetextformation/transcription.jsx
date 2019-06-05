@@ -48,10 +48,10 @@ class Transcription extends Component {
                 return (
                   <React.Fragment key={index}>
                     <Autocomplete
-                      suggestions={["Hillo", "Halo", "Hi"]}
+                      suggestions={wordObject.suggestions}
                       text={wordObject.text}
                       showSuggestion={wordObject.showSuggestion}
-                      mappingNumber={index}
+                      indexing={index}
                       selectMode={this.state.selectMode}
                       {...this.props}
                     />
