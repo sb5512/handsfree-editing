@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import { relative } from "path";
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -76,10 +77,16 @@ class Autocomplete extends Component {
                 onMouseEnter={onHoverSelectable}
                 onClick={onClick}
               >
-                {suggestion}
+                {suggestion}{" "}
+                <div className="text-white float-right">
+                  {String.fromCharCode(97 + index)}
+                </div>
               </li>
             );
           })}
+          <li onMouseEnter={onHoverSelectable} onClick={onClick}>
+            <div className="text-white">spell , lowercase, delete</div>
+          </li>
         </ul>
       );
     } else {
@@ -88,11 +95,17 @@ class Autocomplete extends Component {
 
     return (
       <Fragment>
-        <span style={{ fontSize: 34, cursor: "pointer", paddingLeft: 20 }}>
+        <span
+          style={{
+            fontSize: 34,
+            cursor: "pointer",
+            paddingLeft: 20
+          }}
+        >
           {this.state.userInput}
           {suggestionsListComponent}
         </span>
-        {this.state.indexing}
+        {this.state.indexing + 1}
       </Fragment>
     );
   }

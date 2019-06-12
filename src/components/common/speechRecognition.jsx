@@ -49,8 +49,6 @@ export default function SpeechRecognition(options) {
           spellMode: false,
           oldTranscript: "",
           mappingNumber: null,
-
-          lowercaseMode: false,
           // Part of suggestion - Begins
           suggestionMode: false,
           suggestionListNumber: null,
@@ -100,8 +98,47 @@ export default function SpeechRecognition(options) {
         return toChangeScript;
       }
 
+      containsMapCommands(interimWord) {
+        return interimWord.endsWith("map") || interimWord.endsWith("Map");
+      }
+
       containsCommands(interimWord) {
-        return interimWord.endsWith("map") || interimWord.endsWith("done");
+        return (
+          interimWord.endsWith("map") ||
+          interimWord.endsWith("finish") ||
+          interimWord.endsWith("Map") ||
+          interimWord.endsWith("Finish") ||
+          interimWord.endsWith("clear") ||
+          interimWord.endsWith("Clear")
+        );
+      }
+
+      lowercaseWordByIndex(sentence, index) {
+        let newSentenceArr = sentence.split(" ");
+        newSentenceArr[index] = newSentenceArr[index].toLocaleLowerCase();
+        return newSentenceArr.join(" ");
+      }
+      removeLastWord(sentence) {
+        var lastIndex = sentence.lastIndexOf(" ");
+        if (lastIndex > 0) {
+          return sentence.substring(0, lastIndex);
+        }
+        return "";
+      }
+
+      removeWordByIndex(sentence, index) {
+        console.log("WHAAAAAAAAAAAAAAAAATTTTTTTTTTTTTt is my new index", index);
+        let newSentenceArr = sentence.split(" ");
+        newSentenceArr.splice(index - 1, 1);
+        console.log(
+          "WHAAAAAAAAAAAAAAAAATTTTTTTTTTTTTt is my new sentence",
+          newSentenceArr.join(" ")
+        );
+        return newSentenceArr.join(" ");
+      }
+
+      replaceSpaceWithActualSpace(sentence) {
+        return sentence.split("space").join(" ");
       }
 
       replaceWordWithSpellWord(oldTranscript, toReplaceWord, allTranscript) {
@@ -124,7 +161,12 @@ export default function SpeechRecognition(options) {
       obtainSuggestionForWord(word) {
         // call api and set the suggestion list using the word
         // TODO
-        return ["suggestion1", "suggestion2", "suggestion3", "spellmode"];
+        return ["suggestion1", "suggestion2", "suggestion3"];
+      }
+      obtainSuggestionForLetter(word) {
+        // call api and set the suggestion list using the word
+        // TODO
+        return ["m", "a", "n"];
       }
 
       updateTranscript(event) {
@@ -134,7 +176,6 @@ export default function SpeechRecognition(options) {
         let hasCommand = false;
         let spellMode = this.state.spellMode;
         let suggestionMode = this.state.suggestionMode;
-        let lowercaseMode = false;
         let oldTranscript = this.state.oldTranscript;
         let toCorrectInSpellModeWord = this.state.toCorrectInSpellModeWord;
 
@@ -151,12 +192,15 @@ export default function SpeechRecognition(options) {
 
             // get final transcript here
             if (event.results[i].isFinal) {
-              if (currentTranscription.endsWith("done")) {
+              if (
+                currentTranscription.endsWith("finish") ||
+                currentTranscription.endsWith("Finish")
+              ) {
                 hasCommand = false;
                 spellMode = false;
                 mappingNumber = null;
                 suggestionMode = false;
-                lowercaseMode = false;
+                oldTranscript = "";
                 if (this.state.spellMode) {
                   // only if spell mode on we revert transcript back to old transcript
                   // TODO replace the transcript
@@ -168,7 +212,8 @@ export default function SpeechRecognition(options) {
                 }
               } else if (
                 currentTranscription.endsWith("spell") &&
-                this.state.mappingNumber
+                this.state.mappingNumber &&
+                !this.state.spellMode
               ) {
                 // This is where we will check if selection mode is on and "spell word is in the transcript"
                 console.log(
@@ -177,12 +222,32 @@ export default function SpeechRecognition(options) {
                 hasCommand = false; // Still command mode
                 spellMode = true;
                 suggestionMode = false;
-                lowercaseMode = false;
                 oldTranscript = this.state.finalTranscript; // we set oldtranscript for future use
                 toCorrectInSpellModeWord = this.state.finalTranscript.split(
                   " "
-                )[this.state.mappingNumber];
+                )[this.state.mappingNumber - 1];
                 mappingNumber = null;
+              } else if (
+                currentTranscription.endsWith("delete") &&
+                this.state.mappingNumber
+              ) {
+                console.log(
+                  "NOWWWWWWWWWWWW I AMMMMMMMMMMM GOING TO delete word that is selected"
+                );
+                suggestionMode = false;
+                finalTranscript = this.removeWordByIndex(
+                  finalTranscript,
+                  this.state.spellMode
+                    ? this.state.mappingNumber +
+                        this.state.oldTranscript.split(" ").length
+                    : this.state.mappingNumber
+                );
+              } else if (currentTranscription.endsWith("delete")) {
+                console.log(
+                  "NOWWWWWWWWWWWW I AMMMMMMMMMMM GOING TO delete only"
+                );
+                suggestionMode = false;
+                finalTranscript = this.removeLastWord(finalTranscript);
               } else if (
                 // Here we check if the transcript is a number
                 //
@@ -191,7 +256,6 @@ export default function SpeechRecognition(options) {
                 hasCommand = true;
                 spellMode = this.state.spellMode;
                 suggestionMode = false;
-                lowercaseMode = false;
                 mappingNumber = objIsNumberAndVal.value;
               } else if (
                 currentTranscription.endsWith("a") &&
@@ -240,7 +304,10 @@ export default function SpeechRecognition(options) {
                   "NOWWWWWWWWWWWW I AMMMMMMMMMMM GOING TO MAKE LOWERCASE"
                 );
                 suggestionMode = false;
-                lowercaseMode = true;
+                finalTranscript = this.lowercaseWordByIndex(
+                  finalTranscript,
+                  this.state.mappingNumber
+                );
                 // No spell mode but we have suggestion list number set, which means we want to select from suggestion list
                 // get suggestion list array
                 // depending on the transcript as alpha, beta, charlie ... we set which withinmappingNumber
@@ -251,7 +318,6 @@ export default function SpeechRecognition(options) {
                 hasCommand = true;
                 spellMode = this.state.spellMode;
                 suggestionMode = this.state.suggestionMode;
-                lowercaseMode = this.state.lowercaseMode;
               }
             } else {
               // Even interim results has some command then execute it.
@@ -259,7 +325,6 @@ export default function SpeechRecognition(options) {
               hasCommand = true;
               spellMode = this.state.spellMode;
               suggestionMode = this.state.suggestionMode;
-              lowercaseMode = this.state.lowercaseMode;
             }
           }
         } else {
@@ -268,36 +333,50 @@ export default function SpeechRecognition(options) {
            */
           for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-              let ifContainsMap = event.results[i][0].transcript
-                .trim()
-                .endsWith("map");
+              let trimmedTranscript = event.results[i][0].transcript.trim();
+              let ifContainsMap = this.containsMapCommands(trimmedTranscript);
+              let ifContainsFinish =
+                trimmedTranscript.endsWith("finish") ||
+                trimmedTranscript.endsWith("Finish");
+              let ifContainsClear =
+                trimmedTranscript.endsWith("Clear") ||
+                trimmedTranscript.endsWith("clear");
 
               if (ifContainsMap) {
                 commands.push("map");
                 hasCommand = true;
               }
               // If we say map and go to spell mode and now in that state we say "a" "b" "c" and say done then we come here
-              if (
-                this.state.spellMode &&
-                event.results[i][0].transcript.trim().endsWith("done")
-              ) {
+              if (this.state.spellMode && ifContainsFinish) {
                 spellMode = false;
                 // This is where we will have to replace the spell mode text
+
                 finalTranscript = this.replaceWordWithSpellWord(
                   this.state.oldTranscript,
                   this.state.toCorrectInSpellModeWord,
                   finalTranscript
                 );
+                // now replace "space" with actual space
+                finalTranscript = this.replaceSpaceWithActualSpace(
+                  finalTranscript
+                );
+              } else if (ifContainsClear) {
+                if (this.state.spellMode) {
+                  finalTranscript = oldTranscript;
+                } else {
+                  finalTranscript = "";
+                }
               }
               // finalscript k bhayo ta
               else {
+                // Let us check if in spell mode we only accept letters
+                // if (this.state.spellMode){
+                //   event.results[i][0].transcript
+                // }
                 finalTranscript = this.concatTranscripts(
                   finalTranscript,
                   ifContainsMap
-                    ? event.results[i][0].transcript.substring(
-                        0,
-                        event.results[i][0].transcript.lastIndexOf(" ")
-                      )
+                    ? this.removeLastWord(event.results[i][0].transcript)
                     : event.results[i][0].transcript
                 );
               }
@@ -305,7 +384,7 @@ export default function SpeechRecognition(options) {
               interimTranscript = this.concatTranscripts(
                 interimTranscript,
                 this.containsCommands(event.results[i][0].transcript.trim())
-                  ? ""
+                  ? this.removeLastWord(event.results[i][0].transcript)
                   : event.results[i][0].transcript
               );
             }
@@ -322,8 +401,7 @@ export default function SpeechRecognition(options) {
           oldTranscript,
           toCorrectInSpellModeWord,
           suggestionMode,
-          suggestionListNumber,
-          lowercaseMode
+          suggestionListNumber
         });
       }
 
@@ -388,12 +466,13 @@ export default function SpeechRecognition(options) {
             if (index >= oldTranscriptLength) {
               let showSuggestionBool =
                 this.state.mappingNumber &&
-                index === this.state.mappingNumber + oldTranscriptLength
+                index + 1 === this.state.mappingNumber + oldTranscriptLength
                   ? true
                   : false;
               transcriptObject.push({
                 text: word,
                 showSuggestion: showSuggestionBool,
+                suggestions: this.obtainSuggestionForLetter(word),
                 spellMode: this.state.spellMode
               });
             }
@@ -408,7 +487,7 @@ export default function SpeechRecognition(options) {
           for (const [index, word] of transcript.split(" ").entries()) {
             // if we have index matching mapping number we replace that with suggestionlist[suggestionlistnumber]
             let updatedWord = word;
-            if (index === this.state.mappingNumber) {
+            if (index + 1 === this.state.mappingNumber) {
               updatedWord = this.obtainSuggestionForWord(word)[
                 this.state.suggestionListNumber
               ];
@@ -432,11 +511,11 @@ export default function SpeechRecognition(options) {
           // This is normal tanscript
           for (const [index, word] of transcript.split(" ").entries()) {
             let showSuggestionBool =
-              this.state.mappingNumber && index === this.state.mappingNumber
+              this.state.mappingNumber && index + 1 === this.state.mappingNumber
                 ? true
                 : false;
             transcriptObject.push({
-              text: this.state.lowercaseMode ? word.toLocaleLowerCase() : word,
+              text: word,
               showSuggestion: showSuggestionBool,
               suggestions: this.obtainSuggestionForWord(word),
               spellMode: this.state.spellMode

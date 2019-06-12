@@ -30,6 +30,7 @@ class Transcription extends Component {
     const { transcript, hasCommand, transcriptObject, spellMode } = this.props;
 
     let toRenderDiv;
+    // If in spell mode
     if (spellMode) {
       toRenderDiv = (
         <SpellMode
@@ -40,6 +41,7 @@ class Transcription extends Component {
         />
       );
     } else {
+      // Normal mode. This is where we show regular text and also autocomplete text
       if (hasCommand && transcript) {
         toRenderDiv = (
           <div className="card">
