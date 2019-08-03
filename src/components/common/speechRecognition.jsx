@@ -405,7 +405,8 @@ export default function SpeechRecognition(options) {
                 });
               } else if (
                 // Here we check if the transcript is a number
-                //
+                //&&
+                !this.state.mappingNumber &&
                 objIsNumberAndVal.check
               ) {
                 hasCommand = true;
@@ -460,6 +461,28 @@ export default function SpeechRecognition(options) {
                   text: '"Insert" command given at : ' + Utils.getCurrentTime(),
                   textForLog: ""
                 });
+              } // Let us check if we can check for numbers if they exist
+              else if (
+                objIsNumberAndVal.check &&
+                this.state.mappingNumber &&
+                objIsNumberAndVal.value === 1 //
+              ) {
+                console.log("SUGGESTION LIST FOR FIRST ELEMENT");
+                suggestionMode = true;
+                suggestionListNumber = 0;
+                mappingNumber = this.state.mappingNumber;
+                // No spell mode but we have suggestion list number set, which means we want to select from suggestion list
+                // get suggestion list array
+                // depending on the transcript as alpha, beta, charlie ... we set which withinmappingNumber
+
+                logData.push({
+                  command: "Option '1'",
+                  time: Utils.getCurrentTime(),
+                  text:
+                    'Chosen "1" i.e. first element from suggestion list at : ' +
+                    Utils.getCurrentTime(),
+                  textForLog: ""
+                });
               } else if (
                 (currentTranscription.endsWith("a") ||
                   currentTranscription.endsWith("hey") ||
@@ -486,6 +509,23 @@ export default function SpeechRecognition(options) {
                   textForLog: ""
                 });
               } else if (
+                objIsNumberAndVal.check &&
+                this.state.mappingNumber &&
+                objIsNumberAndVal.value === 2 //
+              ) {
+                console.log("SUGGESTION LIST FOR SECOND ELEMENT");
+                suggestionMode = true;
+                suggestionListNumber = 1;
+                mappingNumber = this.state.mappingNumber;
+                logData.push({
+                  command: "Option '2'",
+                  time: Utils.getCurrentTime(),
+                  text:
+                    'Chosen "2" command from suggestion list at : ' +
+                    Utils.getCurrentTime(),
+                  textForLog: ""
+                });
+              } else if (
                 (currentTranscription.endsWith("B") ||
                   currentTranscription.endsWith("b") ||
                   currentTranscription.endsWith("be") ||
@@ -503,6 +543,23 @@ export default function SpeechRecognition(options) {
                   time: Utils.getCurrentTime(),
                   text:
                     'Chosen "b" command from suggestion list at : ' +
+                    Utils.getCurrentTime(),
+                  textForLog: ""
+                });
+              } else if (
+                objIsNumberAndVal.check &&
+                this.state.mappingNumber &&
+                objIsNumberAndVal.value === 3 //
+              ) {
+                console.log("SUGGESTION LIST FOR THIRD ELEMENT");
+                suggestionMode = true;
+                suggestionListNumber = 2;
+                mappingNumber = this.state.mappingNumber;
+                logData.push({
+                  command: "Option '3'",
+                  time: Utils.getCurrentTime(),
+                  text:
+                    'Chosen "3" command from suggestion list at : ' +
                     Utils.getCurrentTime(),
                   textForLog: ""
                 });
@@ -531,6 +588,23 @@ export default function SpeechRecognition(options) {
                   textForLog: ""
                 });
               } else if (
+                objIsNumberAndVal.check &&
+                this.state.mappingNumber &&
+                objIsNumberAndVal.value === 4 //
+              ) {
+                console.log("SUGGESTION LIST FOR FOURTH ELEMENT");
+                suggestionMode = true;
+                suggestionListNumber = 3;
+                mappingNumber = this.state.mappingNumber;
+                logData.push({
+                  command: "Option '4'",
+                  time: Utils.getCurrentTime(),
+                  text:
+                    'Chosen "4" command from suggestion list at : ' +
+                    Utils.getCurrentTime(),
+                  textForLog: ""
+                });
+              } else if (
                 (currentTranscription.endsWith("d") ||
                   currentTranscription.endsWith("D") ||
                   currentTranscription.endsWith("D&D") ||
@@ -547,6 +621,23 @@ export default function SpeechRecognition(options) {
                   time: Utils.getCurrentTime(),
                   text:
                     'Chosen "d" command from suggestion list at : ' +
+                    Utils.getCurrentTime(),
+                  textForLog: ""
+                });
+              } else if (
+                objIsNumberAndVal.check &&
+                this.state.mappingNumber &&
+                objIsNumberAndVal.value === 5 //
+              ) {
+                console.log("SUGGESTION LIST FOR FIFTH ELEMENT");
+                suggestionMode = true;
+                suggestionListNumber = 4;
+                mappingNumber = this.state.mappingNumber;
+                logData.push({
+                  command: "Option 'e'",
+                  time: Utils.getCurrentTime(),
+                  text:
+                    'Chosen "5" command from suggestion list at : ' +
                     Utils.getCurrentTime(),
                   textForLog: ""
                 });
