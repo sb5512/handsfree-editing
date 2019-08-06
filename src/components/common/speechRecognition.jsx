@@ -59,7 +59,7 @@ export default function SpeechRecognition(options) {
           // Part of suggestion - Begins
           suggestionMode: false,
           suggestionListNumber: null,
-          suggestionList: [],
+          suggestionList: {},
           // Part of suggestion - Ends
 
           // Logging information Begins
@@ -207,17 +207,33 @@ export default function SpeechRecognition(options) {
         return ["m", "a", "n"];
       }
 
-      setSuggestionList = (word, suggestionList) => {
-        let newArr = this.state.suggestionList;
-        newArr.push(suggestionList);
+      // THIS IS WHERE WE INDUCE ERRORS
+      setSuggestionList = (word, suggestions, shouldReplace) => {
+        console.log("THIS WORD SHOULD BE REPLACED", word, shouldReplace);
+        let newDict = this.state.suggestionList;
+
+        if (shouldReplace) {
+          if (!newDict[word + "***"]) {
+            finalTranscript = finalTranscript.replace(word, suggestions[1]);
+          }
+          let replacedWord = suggestions[1] + "***";
+          newDict[replacedWord] = [word];
+        }
+        if (newDict[word + "***"]) {
+          suggestions[1] = newDict[word + "***"];
+          newDict[word] = suggestions;
+        } else {
+          newDict[word] = suggestions;
+        }
+
         this.setState({
-          suggestionList: newArr
+          suggestionList: newDict
         });
       };
 
       clickMouse = () => {
         fetch(
-          "https://hooks.slack.com/services/TKU82KBUG/BLBJPBTHC/igh31aG7hFDwYWRSTGRxiX7",
+          "https://hooks.slack.com/services/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",
           {
             method: "POST",
             headers: {
@@ -701,7 +717,7 @@ export default function SpeechRecognition(options) {
               );
 
               // HERE WE RESET OUR SUGGESTIONS
-              suggestionList = [];
+              // suggestionList = [];
               suggestionMode = false;
               suggestionListNumber = null;
               if (ifContainsMap) {
@@ -981,7 +997,7 @@ export default function SpeechRecognition(options) {
             // if we have index matching mapping number we replace that with suggestionlist[suggestionlistnumber]
             let updatedWord = word;
             if (index + 1 === this.state.mappingNumber) {
-              updatedWord = this.state.suggestionList[index][
+              updatedWord = this.state.suggestionList[word][
                 this.state.suggestionListNumber
               ];
 

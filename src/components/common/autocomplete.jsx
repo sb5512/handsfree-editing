@@ -31,15 +31,15 @@ class Autocomplete extends Component {
   }
 
   componentDidMount() {
-    fetch(`https://api.datamuse.com//words?sl=${this.state.userInput}&max=5`)
-      .then(res => res.json())
-      .then(data => {
-        let answer = data.map(el => el.word);
-        console.log("Fetched information are: ", data);
-        this.props.setSuggestionList(this.state.userInput, answer);
-        this.setState({ suggestions: answer });
-      })
-      .catch(this.setState({ suggestions: ["Loading..."] }));
+    // fetch(`https://api.datamuse.com//words?sl=${this.state.userInput}&max=5`)
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     let answer = data.map(el => el.word);
+    //     console.log("Fetched information are: ", data);
+    //     this.props.setSuggestionList(this.state.userInput, answer);
+    //     this.setState({ suggestions: answer });
+    //   })
+    //   .catch(this.setState({ suggestions: ["Loading..."] }));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -99,7 +99,7 @@ class Autocomplete extends Component {
       suggestionsListComponent = (
         <div className="d-flex flex-column">
           <ButtonGroup size="lg">
-            {this.state.suggestions.map((suggestion, index) => {
+            {this.props.suggestions.map((suggestion, index) => {
               let className; // ??? maybe some css setup
               return (
                 <Button

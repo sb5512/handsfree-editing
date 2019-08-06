@@ -505,4 +505,12 @@ function getPhrases(index) {
   return phrasesArr[index % phrasesArr.length];
 }
 
-module.exports = getPhrases;
+function getSuggestion(sentence) {
+  let phrasesOnlySpaces = text.replace(/\n/g, " ");
+  let phraseArr = phrasesOnlySpaces.split(" ");
+  let phraseArrSecond = phrasesOnlySpaces.match(/[^ ]+ [^ ]+/g);
+  // return phraseArr;
+  return phraseArrSecond;
+}
+
+module.exports = { getPhrases, getSuggestion };
