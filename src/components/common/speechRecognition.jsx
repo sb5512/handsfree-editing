@@ -212,15 +212,22 @@ export default function SpeechRecognition(options) {
         console.log("THIS WORD SHOULD BE REPLACED", word, shouldReplace);
         let newDict = this.state.suggestionList;
 
+        let randomNumber = Math.floor(Math.random() * 6); // use this to replace a suggestion word in list
         if (shouldReplace) {
           if (!newDict[word + "***"]) {
-            finalTranscript = finalTranscript.replace(word, suggestions[1]);
+            finalTranscript = finalTranscript.replace(
+              word,
+              suggestions[randomNumber]
+            );
           }
-          let replacedWord = suggestions[1] + "***";
+          let replacedWord = suggestions[randomNumber] + "***";
           newDict[replacedWord] = [word];
         }
         if (newDict[word + "***"]) {
-          suggestions[1] = newDict[word + "***"];
+          // if suggestion doesnot have the newDict[word + "***"]
+          if (suggestions.indexOf(newDict[word + "***"]) > -1) {
+            suggestions[randomNumber] = newDict[word + "***"];
+          }
           newDict[word] = suggestions;
         } else {
           newDict[word] = suggestions;
