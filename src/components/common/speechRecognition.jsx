@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Utils from "../../utils/Utils";
 import getReplyQuestions from "../../utils/replyQuestions";
-import getPhrases from "../../utils/phrases";
+import { getPhrases } from "../../utils/phrases";
 
 export default function SpeechRecognition(options) {
   const SpeechRecognitionInner = function(WrappedComponent) {

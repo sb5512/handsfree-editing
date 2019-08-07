@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import getPhrases from "../../../utils/phrases";
+import { getPhrases } from "../../../utils/phrases";
 
 class QuestionLoader extends Component {
   render() {
