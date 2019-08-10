@@ -3,14 +3,12 @@ import { Modal } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 
 class ModalSession extends Component {
-  state = { show: true };
-
   handleClose = () => {
-    // this.props.startListening();
-    this.props.historyStates.history.goBack();
-    this.setState({ show: false });
+    this.props.startListening();
+    // this.props.historyStates.history.goBack();
+    this.props.sessionCounterUp();
+    this.props.restartTimer();
   };
-  handleShow = () => this.setState({ show: true });
 
   componentWillMount() {
     this.props.stopListening();
@@ -19,7 +17,7 @@ class ModalSession extends Component {
   render() {
     return (
       <div>
-        <Modal show={this.state.show} onHide={this.handleClose}>
+        <Modal show={true} onHide={this.handleClose}>
           <Modal.Header>
             <Modal.Title>End of Session</Modal.Title>
           </Modal.Header>

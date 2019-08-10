@@ -1,4 +1,64 @@
-const text = `my watch fell in the water
+var text = `the museum hires musicians every evening
+although always alone we survive
+most young rise early every morning
+did dad do academic bidding
+aluminium silverware can often be flimsy
+young people participate in atheletic activities
+mom strongly dislikes appetizers
+catastrophic economic cutbacks neglect the poor
+even a simple vocabulary contains symbols
+any contributions will be greatly appreciated
+we got drenched from uninterrupted rain
+an official deadline cannot be postponed
+bagpipes and bongos are musical intruments
+doctors prescibe drugs too freely
+cement is measured in cubic yards
+iguanas and alligators are tropical reptiles
+guess the question from the answer
+medieval societies were based on hierarchies
+a huge tapestry hung in her hallway
+cut a small corner off each edge
+she had your dark suit in greasy wash water all year
+dont ask me to carry an oily rag like that
+this was easy for us
+swing your arm as high as you can
+the roll of wire lay near the wall
+help him pick a peck of potatoes
+coconut cream cake makes a nice dessert
+academic aptitude gurantees diploma
+the prowler wore a skimask for disguise
+hispanic costumes have an upbeat attitude
+clasp the screw in your left hand
+the mango and the papaya are in a bowl
+encyclopedias seldom present anecdotal evidence
+objects made of pewter are beautiful
+tugboats are capable of hauling huge loads
+bilogists use radioactive isotopes to study microoragnisms
+who took the kayak down the bayou
+they remained lifelong friends and companions
+the government sought authorization of his citizenship
+the drunkard is a social outcast
+the previous speaker presented ambiguous results
+thick glue oozed oout of the tube
+they often go out in the evening
+serve the coleslaw after I add the oil
+straw hats are out of fashion this year
+destroy everyfile related to my audits
+they enjoy it when I audition
+employee layoffs coincided with the company reorganization
+rob sat at the pond and sketched the stray geese
+the hallway opens into a huge chamber
+the paper boy bought two appeles and three ices
+the doctor was in the ambulance with the patient
+reading in poor light gives you eyestrain
+the couried was a dwarf
+a lawyer was appointed to execute her will
+that noise problem grows more annoying each day
+we welcome many new students each year
+this is no surpriseing trait for a ball player
+mollusks are a case in point`;
+
+const textold = `my watch fell in the water
 prevailing wind from the east
 never too rich and never too thin
 breathing is difficult
@@ -508,9 +568,9 @@ function getPhrases(index) {
 function getSuggestion(sentence) {
   let phrasesOnlySpaces = text.replace(/\n/g, " ");
   let phraseArr = phrasesOnlySpaces.split(" ");
-  let phraseArrSecond = phrasesOnlySpaces.match(/[^ ]+ [^ ]+/g);
-  // return phraseArr;
-  return phraseArrSecond;
+  return phraseArr;
+  // let phraseArrSecond = phrasesOnlySpaces.match(/[^ ]+ [^ ]+/g);
+  // return phraseArrSecond;
 }
 
 module.exports = { getPhrases, getSuggestion };

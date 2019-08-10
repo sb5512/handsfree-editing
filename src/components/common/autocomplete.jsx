@@ -111,7 +111,8 @@ class Autocomplete extends Component {
                   <div className="p-3 mb-2 bg-secondary text-white">
                     {suggestion}
                     <div className="float-right text-warning">
-                      {String.fromCharCode(97 + index)}
+                      {/* {String.fromCharCode(97 + index)} */}
+                      {index + 1}
                     </div>
                   </div>
                 </Button>

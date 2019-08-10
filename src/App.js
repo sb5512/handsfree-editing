@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
 import { Route, Switch, Redirect } from "react-router-dom";
 // import SpeechRecognition from "react-speech-recognition";
 
@@ -32,7 +33,36 @@ class App extends Component {
         <Switch>
           <Route
             path="/copytask"
-            render={props => <CopyTask state={props} {...this.props} />}
+            render={props => (
+              <CopyTask
+                state={props}
+                commandTag={false}
+                dwellTag={false}
+                {...this.props}
+              />
+            )}
+          />
+          <Route
+            path="/copytaskcommand"
+            render={props => (
+              <CopyTask
+                state={props}
+                commandTag={true}
+                dwellTag={false}
+                {...this.props}
+              />
+            )}
+          />
+          <Route
+            path="/copytaskdwell"
+            render={props => (
+              <CopyTask
+                state={props}
+                commandTag={false}
+                dwellTag={true}
+                {...this.props}
+              />
+            )}
           />
           <Route
             path="/replytask"
@@ -44,6 +74,32 @@ class App extends Component {
               <FreeTextFormationTask
                 state={props}
                 loadedImage={true}
+                commandTag={false}
+                dwellTag={false}
+                {...this.props}
+              />
+            )}
+          />
+          <Route
+            path="/freetextformationtaskcommand"
+            render={props => (
+              <FreeTextFormationTask
+                state={props}
+                loadedImage={true}
+                commandTag={true}
+                dwellTag={false}
+                {...this.props}
+              />
+            )}
+          />
+          <Route
+            path="/freetextformationtaskdwell"
+            render={props => (
+              <FreeTextFormationTask
+                state={props}
+                loadedImage={true}
+                commandTag={false}
+                dwellTag={true}
                 {...this.props}
               />
             )}
@@ -63,6 +119,37 @@ class App extends Component {
           />
           <Redirect to="/not-found" />
         </Switch>
+        <Navbar bg="dark" variant="dark" fixed="bottom">
+          <Navbar.Brand className="font-weight-bold mx-auto">map</Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            cancel
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            delete
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            finish
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            spell
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            lowercase
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            clear
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            insert
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            space
+          </Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">next</Navbar.Brand>
+          <Navbar.Brand className="font-weight-bold mx-auto">
+            click
+          </Navbar.Brand>
+        </Navbar>
       </div>
     );
   }

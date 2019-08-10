@@ -17,37 +17,62 @@ class CopyDictate extends Component {
   state = {
     clickedWord: "",
     hover: false,
-    timeoutId: null
+    timeoutId: null,
+    sessionCounter: 5
+  };
+
+  sessionCounterUp = () => {
+    this.setState({ sessionCounter: this.state.sessionCounter + 5 });
   };
 
   handleWordClick = (e, word, index) => {
     e.target.style.backgroundColor = "#F44FFF";
     this.setState({ clickedWord: `${word} at index ${index + 1}` });
     this.props.handleWordClickToGetToMappingWithNumberState(index + 1, word);
+    fetch(
+      "https://hooks.slack.com/services/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",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: JSON.stringify({
+          channel: "test_ob_tooling",
+          text: "#f4press"
+        })
+      }
+    );
   };
 
   toggleHoverOn = event => {
-    event.target.style.backgroundColor = "#FFFF4F";
-    if (!this.state.timeoutId) {
-      let timeoutId = window.setTimeout(() => {
-        this.setState({ timeoutId: null }); // EDIT: added this line
-        console.log("YAYYYYYYYYYYYYY 1 seconds");
-        fetch(
-          "https://hooks.slack.com/services/TKU82KBUG/BLBJPBTHC/igh31aG7hFDwYWRSTGRxiX7",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: JSON.stringify({
-              channel: "test_ob_tooling",
-              text: "#clickmouse"
-            })
-          }
-        );
-      }, 1000);
-      this.setState({ timeoutId: timeoutId });
+    if (this.props.commandTag && !this.props.dwellTag) {
+      event.target.style.backgroundColor = "#FFFF4F";
+    } else if (!this.props.commandTag && this.props.dwellTag) {
+      event.target.style.backgroundColor = "#FFFF4F";
+      if (!this.state.timeoutId) {
+        let timeoutId = window.setTimeout(() => {
+          this.setState({ timeoutId: null }); // EDIT: added this line
+          console.log("YAYYYYYYYYYYYYY 1 seconds");
+          fetch(
+            "https://hooks.slack.com/services/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",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: JSON.stringify({
+                channel: "test_ob_tooling",
+                text: "#clickmouse"
+              })
+            }
+          );
+        }, 1000);
+        this.setState({ timeoutId: timeoutId });
+      }
+    } else {
+      // TODO maybe we can send a message where a mouse cursor gets hidden
     }
+
     this.props.logTimeDataWhenHoveredAtWord(event.target.innerHTML);
 
     this.setState({ hover: true });
@@ -79,6 +104,8 @@ class CopyDictate extends Component {
             toggleHoverOn={this.toggleHoverOn}
             toggleHoverOff={this.toggleHoverOff}
             {...this.props}
+            sessionCounter={this.state.sessionCounter}
+            sessionCounterUp={this.sessionCounterUp}
           />
           <Logdata
             logDataPersist={this.props.logDataPersist}
@@ -87,6 +114,10 @@ class CopyDictate extends Component {
             stopListening={this.props.stopListening}
             startListening={this.props.startListening}
             historyStates={this.props.state}
+            restartTimer={this.props.restartTimer}
+            {...this.props}
+            sessionCounter={this.state.sessionCounter}
+            sessionCounterUp={this.sessionCounterUp}
           />
         </React.Fragment>
       );
@@ -108,6 +139,10 @@ class CopyDictate extends Component {
             stopListening={this.props.stopListening}
             startListening={this.props.startListening}
             historyStates={this.props.state}
+            restartTimer={this.props.restartTimer}
+            {...this.props}
+            sessionCounter={this.state.sessionCounter}
+            sessionCounterUp={this.sessionCounterUp}
           />
         </React.Fragment>
       );

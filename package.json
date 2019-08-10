@@ -6,6 +6,7 @@
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.10",
+    "node-fetch": "^2.6.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-countdown-clock": "^2.6.0",
@@ -16,7 +17,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "^2.1.8",
     "react-speech-recognition": "^2.0.1",
-    "words-to-numbers": "^1.5.1"
+    "words-to-numbers": "^1.5.1",
+    "xmlhttprequest": "^1.8.0"
   },
   "scripts": {
     "start": "react-scripts start",

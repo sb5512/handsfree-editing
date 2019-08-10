@@ -22,8 +22,12 @@ class ImageLoader extends Component {
           <Row>
             <Col xs={6} md={12}>
               <h4 className="text-center">
-                Pick two images. Describe the images and tell a story about the
-                people in the images.
+                Pick{" "}
+                <b>
+                  <font color="red">two</font>
+                </b>{" "}
+                images. Describe the images and tell a story about the people in
+                the images.
               </h4>
             </Col>
           </Row>

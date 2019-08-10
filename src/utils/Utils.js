@@ -1,5 +1,6 @@
 import commandsENUM from "../components/tasks/freetextformation/commandENUM";
 import TextToNumbers from "./textToNumbers";
+import getSuggestionDictionary from "./suggestions";
 
 class Utils {
   static getRandomInt(max) {
@@ -61,16 +62,49 @@ class Utils {
   //   fastcsv.write(data, { headers: true }).pipe(ws);
   // }
 
+  static getSuggestionsDict() {
+    return getSuggestionDictionary();
+  }
+
+  static obtainSuggestionForAllCharacters() {
+    // call api and set the suggestion list using the word
+    // TODO
+    console.log("This function on getting all dictionary value is called");
+    let characters = "abcdefghijklmnopqrstuvwxyz";
+    let dictAllCharacters = {};
+    characters.split("").map(character => {
+      let result = [];
+      let charactersLength = characters.length;
+      for (var i = 0; i < 5; i++) {
+        result.push(
+          characters.charAt(Math.floor(Math.random() * charactersLength))
+        );
+      }
+      dictAllCharacters[character] = result;
+    });
+    console.log(dictAllCharacters);
+    return dictAllCharacters;
+  }
+
   static checkStringIsNumberWordOrNumber(currentTranscription) {
-    let suggestionListNumber =
-      currentTranscription.lastIndexOf(" ") > 0
-        ? TextToNumbers.text2num(
-            currentTranscription.substring(
-              currentTranscription.lastIndexOf(" "),
-              currentTranscription.length
+    let suggestionListNumber;
+    if (
+      currentTranscription.endsWith("4") ||
+      currentTranscription.endsWith("for")
+    ) {
+      console.log("It actually came here for the map numbers");
+      suggestionListNumber = 4;
+    } else {
+      suggestionListNumber =
+        currentTranscription.lastIndexOf(" ") > 0
+          ? TextToNumbers.text2num(
+              currentTranscription.substring(
+                currentTranscription.lastIndexOf(" "),
+                currentTranscription.length
+              )
             )
-          )
-        : parseInt(currentTranscription);
+          : parseInt(currentTranscription);
+    }
     return {
       check: !isNaN(suggestionListNumber) && suggestionListNumber > 0,
       value: suggestionListNumber

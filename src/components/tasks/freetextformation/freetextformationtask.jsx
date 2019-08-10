@@ -6,7 +6,7 @@ import { Image, Container, Col, Row } from "react-bootstrap";
 import ReactCountdownClock from "react-countdown-clock";
 
 class FreeTextFormationTask extends Component {
-  state = { readyToListen: false };
+  state = { readyToListen: false, counterTimer: 3 };
 
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
@@ -28,6 +28,14 @@ class FreeTextFormationTask extends Component {
       this.setState({ readyToListen: true });
       this.props.startListening();
     }
+  };
+
+  restartTimer = () => {
+    this.props.stopListening();
+    this.setState({
+      readyToListen: false,
+      counterTimer: this.state.counterTimer + 1
+    });
   };
 
   myCallback = () => {
@@ -59,6 +67,7 @@ class FreeTextFormationTask extends Component {
         <Row>
           <Col xs={6} md={10}>
             <ReactCountdownClock
+              key={this.state.counterTimer}
               seconds={3}
               color="#000"
               alpha={0.9}
@@ -72,7 +81,11 @@ class FreeTextFormationTask extends Component {
         </Row>{" "}
         <Row>
           <div className="container-fluid">
-            <FreeTextFormationDictate {...this.props} {...this.state} />
+            <FreeTextFormationDictate
+              {...this.props}
+              {...this.state}
+              restartTimer={this.restartTimer}
+            />
           </div>{" "}
         </Row>
       </React.Fragment>

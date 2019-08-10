@@ -5,7 +5,7 @@ import keydown from "react-keydown";
 import ReactCountdownClock from "react-countdown-clock";
 
 class CopyTask extends Component {
-  state = { readyToListen: false };
+  state = { readyToListen: false, counterTimer: 3 };
 
   componentWillReceiveProps({ keydown }) {
     if (keydown.event) {
@@ -27,6 +27,14 @@ class CopyTask extends Component {
       this.setState({ readyToListen: true });
       this.props.startListening();
     }
+  };
+
+  restartTimer = () => {
+    this.props.stopListening();
+    this.setState({
+      readyToListen: false,
+      counterTimer: this.state.counterTimer + 1
+    });
   };
 
   myCallback = () => {
@@ -57,6 +65,7 @@ class CopyTask extends Component {
       <React.Fragment>
         <div>
           <ReactCountdownClock
+            key={this.state.counterTimer}
             seconds={3}
             color="#000"
             alpha={0.9}
@@ -66,7 +75,11 @@ class CopyTask extends Component {
           {speechButton}
         </div>
         <div className="container-fluid">
-          <CopyDictate {...this.props} {...this.state} />
+          <CopyDictate
+            {...this.props}
+            {...this.state}
+            restartTimer={this.restartTimer}
+          />
         </div>
       </React.Fragment>
     );

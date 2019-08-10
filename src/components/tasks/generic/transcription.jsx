@@ -8,16 +8,15 @@ class Transcription extends Component {
       // Let us check if the wordObject has the longest word
       const filteredTranscribedObject = this.props.transcriptObject.filter(
         wordObject => {
-          return !this.props.suggestionList[wordObject.text];
+          return (
+            this.props.suggestionList[wordObject.text] &&
+            this.props.suggestionList[wordObject.text].length > 0
+          );
         }
       );
+      let longestObj;
       if (filteredTranscribedObject.length > 0) {
-        console.log(
-          "YOOOooooooooooooooooooooo honita filtered object",
-          filteredTranscribedObject
-        );
-
-        let longestObj = filteredTranscribedObject.reduce(function(a, b) {
+        longestObj = filteredTranscribedObject.reduce(function(a, b) {
           return a.text.length > b.text.length ? a : b;
         });
 
@@ -25,30 +24,36 @@ class Transcription extends Component {
           "THE LONGEST WORD IN THIS TRANSCRIPTION SECTION IS",
           longestObj
         );
-        filteredTranscribedObject.map((wordObject, index) => {
-          // if wordbject.text has already been fetched i.e. suggestionlist has it already than ignore fetch.
-          console.log(
-            "I ACTUALLY THOUGHT THIS WAS A SUGGESTION YOYA ",
-            this.props.suggestionList[wordObject.text]
-          );
-          if (!this.props.suggestionList[wordObject.text]) {
-            fetch(`https://api.datamuse.com//words?sl=${wordObject.text}&max=5`)
-              .then(res => res.json())
-              .then(data => {
-                let answer = data.map(el => el.word);
-                console.log("Fetched information are: ", data);
-                this.props.setSuggestionList(
-                  wordObject.text,
-                  answer,
-                  wordObject.text === longestObj.text
-                );
-                // this.setState({ suggestions: answer });
-              })
-              .catch //this.setState({ suggestions: ["Loading..."] })
-              ();
-          }
-        });
       }
+      this.props.transcriptObject.map((wordObject, index) => {
+        if (
+          this.props.suggestionList[wordObject.text] &&
+          longestObj &&
+          wordObject.text === longestObj.text
+        ) {
+          this.props.setInducedError(wordObject.text);
+        }
+
+        if (!this.props.suggestionList[wordObject.text]) {
+          console.log(
+            "No Suggestion stored in dictionary for word: ",
+            wordObject.text
+          );
+          console.log("Fetching....................");
+          fetch(`https://api.datamuse.com//words?sl=${wordObject.text}&max=6`)
+            .then(res => res.json())
+            .then(data => {
+              let answer = data.map(el => el.word);
+              // remove the first suggestion as it is always what the word was sent as
+              answer.shift();
+              console.log("Fetched information are: ", data);
+              this.props.setSuggestionList(wordObject.text, answer, false);
+              // this.setState({ suggestions: answer });
+            })
+            .catch //this.setState({ suggestions: ["Loading..."] })
+            ();
+        }
+      });
     }
   }
 
